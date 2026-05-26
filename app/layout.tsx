@@ -26,6 +26,28 @@ export default function RootLayout({
       className={cn("h-full", "antialiased")}
       suppressHydrationWarning
     >
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var theme = localStorage.getItem('theme');
+                  if (!theme) {
+                    theme = 'dark';
+                    localStorage.setItem('theme', 'dark');
+                  }
+                  if (theme === 'dark') {
+                    document.documentElement.classList.add('dark');
+                  } else {
+                    document.documentElement.classList.remove('dark');
+                  }
+                } catch(e) {}
+              })();
+            `,
+          }}
+        />
+      </head>
       <body
         className={`min-h-full justify-center items-center flex flex-col dark:bg-background tracking-tight px-4 ${roboto.className}`}
       >
