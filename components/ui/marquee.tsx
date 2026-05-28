@@ -31,6 +31,11 @@ interface MarqueeProps extends ComponentPropsWithoutRef<"div"> {
    * @default 4
    */
   repeat?: number;
+  /**
+   * Whether to make the marquee full width
+   * @default false
+   */
+  fullWidth?: boolean;
 }
 
 export function Marquee({
@@ -38,6 +43,7 @@ export function Marquee({
   reverse = false,
   pauseOnHover = false,
   children,
+  fullWidth = false,
   vertical = false,
   repeat = 4,
   ...props
@@ -46,10 +52,11 @@ export function Marquee({
     <div
       {...props}
       className={cn(
-        "group flex gap-(--gap) overflow-hidden p-2 [--duration:40s] [--gap:1rem]",
+        "group  flex gap-(--gap) overflow-hidden [--duration:40s] [--gap:1rem]",
         {
           "flex-row": !vertical,
           "flex-col": vertical,
+          "w-full": fullWidth,
         },
         className,
       )}
@@ -59,11 +66,12 @@ export function Marquee({
         .map((_, i) => (
           <div
             key={i}
-            className={cn("flex shrink-0 justify-around gap-(--gap)", {
+            className={cn("flex  shrink-0 justify-around gap-(--gap)", {
               "animate-marquee flex-row": !vertical,
               "animate-marquee-vertical flex-col": vertical,
               "group-hover:[animation-play-state:paused]": pauseOnHover,
               "[animation-direction:reverse]": reverse,
+              "w-full": fullWidth,
             })}
           >
             {children}

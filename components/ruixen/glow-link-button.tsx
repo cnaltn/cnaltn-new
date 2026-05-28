@@ -2,6 +2,7 @@
 
 import { motion } from "motion/react";
 import * as React from "react";
+import { cn } from "@/lib/utils";
 
 /* ── sound ── */
 let _a: AudioContext, _b: AudioBuffer;
@@ -28,6 +29,7 @@ export interface GlowLinkButtonProps {
   href?: string;
   sound?: boolean;
   style?: React.CSSProperties;
+  className?: string;
 }
 
 export default function GlowLinkButton({
@@ -35,13 +37,14 @@ export default function GlowLinkButton({
   href = "#",
   sound = true,
   style,
+  className,
 }: GlowLinkButtonProps) {
   const [hovered, setHovered] = React.useState(false);
   const [glowX, setGlowX] = React.useState(0);
 
   return (
     <motion.a
-      className="gl"
+      className={cn("gl", className)}
       href={href}
       target="_blank"
       rel="noopener noreferrer"

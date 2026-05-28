@@ -27,6 +27,30 @@ function ClockDigit({ value }: { value: number }) {
   );
 }
 
+function ColonSeparator() {
+  return (
+    <Matrix
+      rows={7}
+      cols={3}
+      pattern={colon}
+      size={4.5}
+      gap={1.5}
+      ariaLabel="colon"
+    />
+  );
+}
+
+function ClockDigits({ digits: digitValues }: { digits: number[] }) {
+  const parts: React.ReactNode[] = [];
+  for (let i = 0; i < 6; i++) {
+    parts.push(<ClockDigit key={`d-${i}`} value={digitValues[i]} />);
+    if (i === 1 || i === 3) {
+      parts.push(<ColonSeparator key={`c-${i}`} />);
+    }
+  }
+  return <div className="flex items-center gap-1">{parts}</div>;
+}
+
 export function DigitalClock() {
   const [time, setTime] = useState<Date | null>(null);
   const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
@@ -42,70 +66,27 @@ export function DigitalClock() {
     return () => clearTimeout(timerRef.current);
   }, []);
 
-  if (!time) {
-    return (
-      <div
-        className="flex items-center gap-1 w-full h-full justify-center"
-        role="timer"
-        aria-label="Loading clock"
-      >
-        <ClockDigit value={0} />
-        <ClockDigit value={0} />
-        <Matrix
-          rows={7}
-          cols={3}
-          pattern={colon}
-          size={4.5}
-          gap={1.5}
-          ariaLabel="colon"
-        />
-        <ClockDigit value={0} />
-        <ClockDigit value={0} />
-        <Matrix
-          rows={7}
-          cols={3}
-          pattern={colon}
-          size={4.5}
-          gap={1.5}
-          ariaLabel="colon"
-        />
-        <ClockDigit value={0} />
-        <ClockDigit value={0} />
-      </div>
-    );
-  }
+  const hours = time
+    ? String(time.getHours()).padStart(2, "0")
+    : "00";
+  const minutes = time
+    ? String(time.getMinutes()).padStart(2, "0")
+    : "00";
+  const seconds = time
+    ? String(time.getSeconds()).padStart(2, "0")
+    : "00";
 
-  const hours = String(time.getHours()).padStart(2, "0");
-  const minutes = String(time.getMinutes()).padStart(2, "0");
-  const seconds = String(time.getSeconds()).padStart(2, "0");
-
-  const allDigits = hours + minutes + seconds;
-
-  const parts: React.ReactNode[] = [];
-  for (let i = 0; i < 6; i++) {
-    parts.push(<ClockDigit key={`d-${i}`} value={Number(allDigits[i])} />);
-    if (i === 1 || i === 3) {
-      parts.push(
-        <Matrix
-          key={`c-${i}`}
-          rows={7}
-          cols={3}
-          pattern={colon}
-          size={4.5}
-          gap={1.5}
-          ariaLabel="colon"
-        />,
-      );
-    }
-  }
+  const allDigits = (hours + minutes + seconds).split("").map(Number);
 
   return (
     <div
-      className="flex items-center gap-1 w-full h-full justify-center"
+      className="flex items-center justify-center w-full h-full"
       role="timer"
-      aria-label={`${hours}:${minutes}:${seconds}`}
+      aria-label={time ? `${hours}:${minutes}:${seconds}` : "Loading clock"}
     >
-      {parts}
+      <div className="scale-[0.65] sm:scale-100 transition-transform origin-center">
+        <ClockDigits digits={allDigits} />
+      </div>
     </div>
   );
 }

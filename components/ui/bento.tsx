@@ -340,7 +340,7 @@ export function BentoGrid({
   children,
   className,
   cols = { base: 1, md: 3, lg: 5 },
-  gap = { base: 1, md: 2, lg: 4 },
+  gap = { base: 2, md: 3, lg: 4 },
   rowHeight = { base: "60px", md: "80px", lg: "100px" },
 }: BentoGridProps) {
   const style = useResponsiveRowHeight(rowHeight);
